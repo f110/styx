@@ -1,13 +1,14 @@
 package main
 
 import (
+	"encoding/csv"
 	"fmt"
 	"io"
 	"sort"
 	"strings"
 )
 
-func csvWriter(w io.Writer, results []Result) error {
+func writeCSV(w *csv.Writer, results []Result) error {
 	if len(results) == 0 {
 		return nil
 	}
@@ -31,17 +32,17 @@ func csvWriter(w io.Writer, results []Result) error {
 
 	// Iterate over all times and find the belonging values for each result.
 	for _, time := range times {
-		fmt.Fprint(w, time)
+		line := make([]string, 0)
 		for _, result := range results {
-			fmt.Fprint(w, ","+result.Values[time])
+			line = append(line, result.Values[time])
 		}
-		fmt.Fprintln(w)
+		w.Write(append([]string{time}, line...))
 	}
 
 	return nil
 }
 
-func csvHeaderWriter(w io.Writer, results []Result) error {
+func csvHeaderWriter(w *csv.Writer, results []Result) error {
 	if len(results) == 0 {
 		return nil
 	}
@@ -51,8 +52,7 @@ func csvHeaderWriter(w io.Writer, results []Result) error {
 		header = append(header, result.Metric)
 	}
 
-	fmt.Fprintln(w, strings.Join(header, ","))
-	return nil
+	return w.Write(header)
 }
 
 func matplotlibWriter(w io.Writer, results []Result) error {

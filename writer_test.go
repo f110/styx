@@ -10,7 +10,7 @@ import (
 func TestCSVWriter(t *testing.T) {
 	// No results
 	buf := bytes.NewBuffer(nil)
-	assert.NoError(t, csvWriter(buf, nil))
+	assert.NoError(t, writeCSV(buf, nil))
 	assert.Equal(t, "", buf.String())
 
 	// Result with one entry
@@ -21,7 +21,7 @@ func TestCSVWriter(t *testing.T) {
 		},
 	}}
 	buf = bytes.NewBuffer(nil)
-	assert.NoError(t, csvWriter(buf, res))
+	assert.NoError(t, writeCSV(buf, res))
 	assert.Equal(t, "1502749393,42\n", buf.String())
 
 	// One result with multiple time series
@@ -37,7 +37,7 @@ func TestCSVWriter(t *testing.T) {
 	}}
 	expected := "1502749391,1\n1502749392,2\n1502749393,3\n1502749394,4\n1502749395,5\n"
 	buf = bytes.NewBuffer(nil)
-	assert.NoError(t, csvWriter(buf, res))
+	assert.NoError(t, writeCSV(buf, res))
 	assert.Equal(t, expected, buf.String())
 
 	// Two results with multiple time series
@@ -62,7 +62,7 @@ func TestCSVWriter(t *testing.T) {
 	}}
 	expected = "1502749390,0,5\n1502749391,1,6\n1502749392,2,7\n1502749393,3,8\n1502749394,4,9\n"
 	buf = bytes.NewBuffer(nil)
-	assert.NoError(t, csvWriter(buf, res))
+	assert.NoError(t, writeCSV(buf, res))
 	assert.Equal(t, expected, buf.String())
 
 	// Two results with multiple time series
@@ -87,7 +87,7 @@ func TestCSVWriter(t *testing.T) {
 	}}
 	expected = "1502749390,0,5\n1502749391,,6\n1502749392,2,7\n1502749393,3,8\n1502749394,4,9\n1502749396,10,\n"
 	buf = bytes.NewBuffer(nil)
-	assert.NoError(t, csvWriter(buf, res))
+	assert.NoError(t, writeCSV(buf, res))
 	assert.Equal(t, expected, buf.String())
 }
 

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/csv"
 	"fmt"
 	"log"
 	"os"
@@ -107,12 +108,13 @@ func exportAction(c *cli.Context) error {
 		return err
 	}
 
+	csvWriter := csv.NewWriter(os.Stdout)
 	// Only add a line as header when the flag is true, which is the default
 	if flag.Header {
-		if err := csvHeaderWriter(os.Stdout, results); err != nil {
+		if err := csvHeaderWriter(csvWriter, results); err != nil {
 			return err
 		}
 	}
 
-	return csvWriter(os.Stdout, results)
+	return writeCSV(csvWriter, results)
 }

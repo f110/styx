@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"encoding/csv"
 	"fmt"
 	"strings"
 	"time"
@@ -40,7 +41,7 @@ func gnuplotAction(c *cli.Context) error {
 	buf := bytes.NewBufferString(header)
 
 	buf.WriteString("$DATA << EOD\n")
-	if err := csvWriter(buf, results); err != nil {
+	if err := writeCSV(csv.NewWriter(buf), results); err != nil {
 		return err
 	}
 	buf.WriteString("EOD\n")
